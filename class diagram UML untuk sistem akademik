@@ -1,0 +1,85 @@
+classDiagram
+    direction LR
+    
+    %% Kelas Dasar (User) dan Inheritansi (Penerapan LSP dan OCP)
+    class User {
+        +String userID
+        +String nama
+        +String email
+        +String role
+        +login()
+        +logout()
+    }
+    class Mahasiswa {
+        +String nim
+        +String prodi
+        +ambilMataKuliah()
+        +lihatNilai()
+    }
+    class Dosen {
+        +String nip
+        +String prodiAjar
+        +inputNilai()
+        +setJadwalAjar()
+    }
+    class Admin {
+        +kelolaUser()
+        +kelolaCourse()
+        +kelolaJadwal()
+    }
+    class CalonMahasiswa {
+        +String noPendaftaran
+        +daftar()
+        +cekStatus()
+    }
+    
+    User <|-- Mahasiswa : Mewarisi
+    User <|-- Dosen : Mewarisi
+    User <|-- Admin : Mewarisi
+    User <|-- CalonMahasiswa : Mewarisi
+
+    %% Kelas Lain
+    class Course {
+        +String kode
+        +String nama
+        +int sks
+        +Set<String> prasyarat
+    }
+    
+    class Schedule {
+        +String hari
+        +String jam
+        +String ruangan
+    }
+    
+    class Grade {
+        +String komponenNilai
+        +float nilaiAngka
+        +String nilaiHuruf
+    }
+
+    class Enrollment {
+        +String tahunAjaran
+        +String semester
+        +Date tanggalDaftar
+        +setStatus()
+        +getNilaiAkhir()
+    }
+    
+    %% Relasi
+    
+    %% Composition: Course tidak dapat eksis tanpa Jadwal, dan Jadwal terkait erat dengan satu Course tertentu.
+    Course *-- "1" Schedule : Memiliki (Composition)
+    
+    %% Aggregation: Enrollment merujuk ke Course dan Mahasiswa, tetapi Course dan Mahasiswa dapat eksis tanpa Enrollment.
+    Mahasiswa "1" o-- "*" Enrollment : Mengambil (Aggregation)
+    Course "1" o-- "*" Enrollment : Diambil (Aggregation)
+
+    %% Composition: Enrollment memiliki nilai (Grade) sebagai bagian integral dari proses.
+    Enrollment *-- "1" Grade : Memuat (Composition)
+
+    %% Aggregation: Course diajar oleh Dosen, Dosen dapat mengajar banyak Course, dan Course dapat diajar oleh banyak Dosen (Relasi Many-to-Many).
+    Dosen "1..*" o-- "*" Course : Mengajar (Aggregation)
+    
+    %% Dependency/Association: Course dapat memiliki prasyarat Course lain (asumsi relasi dalam atribut prasyarat di Course, di sini ditunjukkan sebagai Asosiasi)
+    Course --> Course : Prasyarat
