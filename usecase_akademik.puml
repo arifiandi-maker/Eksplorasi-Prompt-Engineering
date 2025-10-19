@@ -1,0 +1,39 @@
+@startuml Academic System Use Case
+
+skinparam actorStyle awesome
+
+' Actors
+actor "Mahasiswa" as student
+actor "Dosen" as lecturer
+actor "Admin Akademik" as admin
+
+rectangle "Sistem Akademik" {
+    ' Use Cases
+    usecase "Pendaftaran KRS" as uc1
+    usecase "Approve KRS" as uc2
+    usecase "Input Nilai" as uc3
+    usecase "Generate Transkrip" as uc4
+    usecase "Validasi Status Akademik" as uc5
+    usecase "Cek Prasyarat Mata Kuliah" as uc6
+    usecase "Lihat KRS" as uc7
+    usecase "Lihat Nilai" as uc8
+
+    ' Relationships
+    student --> uc1
+    student --> uc7
+    student --> uc8
+    
+    lecturer --> uc3
+    
+    admin --> uc2
+    admin --> uc4
+    
+    ' Include relationships
+    uc1 ..> uc5 : <<include>>
+    uc1 ..> uc6 : <<include>>
+    
+    ' Extend relationships
+    uc7 ..> uc1 : <<extend>>
+}
+
+@enduml
